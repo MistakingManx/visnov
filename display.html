@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- (early development)
+		 | You shouldn't have to edit this file,
+		 | but incase you want to, I've labelled 
+		 | things you might be curious about with 
+		 | a description.
+		-->
+		<meta charset="UTF-8">
+		<style description="Fall back styling">
+			html, body {
+				color: white;
+				background: black;
+				margin: 0;
+				text-align: left;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			#render {
+				aspect-ratio: 16 / 9;
+				background: gray;
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+			img {
+				user-select: none;
+				-webkit-user-drag: none;
+			}
+			#splash {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				height: 25%;
+				animation-name: splashy;
+				animation-delay: 250ms;
+				animation-duration: 1s;
+				animation-iteration-count: infinite;
+			}
+			@keyframes splashy {
+				0% {
+					height: 25%
+				}
+				25% {
+					height: 30%;
+				}
+				50% {
+					height: 20%;
+				}
+				25% {
+					height: 30%;
+				}
+				100% {
+					height: 25%
+				}
+			}
+		</style>
+		<link rel="stylesheet" href="./sys/css/render.css">
+		<!-- Custom Head -->
+		<title>VisNov</title>
+		<!-- Custom Head -->
+	</head>
+	<body>
+		<div id="render" style="opacity:0">
+			<img id="splash" src="./sys/img/icon.png"></img>
+		</div>
+	</body>
+	<script src="./sys/script/swal.min.js" description="Temporary dependency for menus"></script>
+	<script src="./sys/script/init.js" description="VisNov classes"></script>
+	<script description="Initializer">
+		if (typeof(sleep) !== "function") {
+			const sleep = t => new Promise(r => setTimeout(r, t * 1000));
+		}
+		(async () => {
+			let render = document.getElementById("render");
+			let slash = document.getElementById('splash');
+			let mode = "height";
+			window.onresize = () => {
+				let overflow;
+				switch(mode) {
+					case "height":
+						render.style.width = ""; render.style.height = document.body.getBoundingClientRect().height + "px";
+						overflow = render.getBoundingClientRect().width > document.body.getBoundingClientRect().width;
+						if (overflow) { mode = "width"; window.onresize() }
+					break;
+					case "width":
+						render.style.height = ""; render.style.width = document.body.getBoundingClientRect().width + "px";
+						overflow = render.getBoundingClientRect().height > document.body.getBoundingClientRect().height;
+						if (overflow) { mode = "height"; window.onresize() }
+					break;
+				}
+			};
+			window.onresize();
+			window.client = new VisNov();
+			typeOutTitle(" " + client.meta.flavour + " " + client.meta.version, true);
+			client.render.show();
+		})().catch(console.error);
+		async function typeOutTitle(text, append) {
+			if (typeof(text) !== "string") return null;
+			append = append?1:0;
+			let prepend = '';
+			if (!append) { document.title = "" }
+			for (let letter of text) {
+				if (letter == " ") {
+					prepend += " ";
+					continue;
+				}
+				document.title += prepend + letter;
+				prepend = "";
+				await sleep(.25);
+			}
+		}
+	</script>
+</html>

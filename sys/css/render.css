@@ -1,0 +1,10 @@
+#render {
+    animation: VisNovRenderBG_Animation 14s ease infinite;
+    background: linear-gradient(230deg, #252627, #4c5156, #787f85);
+    background-size: 600% 600%;
+}
+@keyframes VisNovRenderBG_Animation {
+    0% { background-position:90% 0% }
+    50% { background-position:11% 100% }
+    100% { background-position:90% 0% }
+}
